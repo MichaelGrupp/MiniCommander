@@ -76,7 +76,7 @@ public:
     // check whether any token satisfies the custom boolean functor or lambda 'f' which evaluates against 't'
     // of type T, e.g. a regex: f = [&](std::string token, std::regex re) { return ... }
     template<typename T>
-    bool anyToken(const std::function<bool(std::string, T)> f, T&& t) const {
+    bool anyToken(const std::function<bool(std::string, T)> f, T& t) const {
         bool satisfied = false;
         for (auto &token: tokens) {
             satisfied = f(token, std::forward<T>(t));
