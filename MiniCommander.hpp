@@ -1,3 +1,6 @@
+// author: Michael Grupp
+// https://github.com/MichaelGrupp/MiniCommander
+
 enum class Policy {
     required,
     anyOf,
