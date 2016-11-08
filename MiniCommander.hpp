@@ -1,6 +1,16 @@
 // author: Michael Grupp
 // https://github.com/MichaelGrupp/MiniCommander
 
+#ifndef MINICMD
+#define MINICMD
+
+#include <set>
+#include <map>
+#include <vector>
+#include <functional>
+#include <iostream>
+
+
 enum class Policy {
     required,
     anyOf,
@@ -19,13 +29,14 @@ public:
         this->options[policy].insert(std::make_pair(flag, desc));
     }
 
-    bool checkFlags() const {
+    bool checkFlags() {
         bool valid = false;
-        for (auto &o : options[Policy::anyOf])
+        for (auto& o : options[Policy::anyOf]) {
             valid = optionExists(o.first.c_str());
-        if (!valid)
-            return valid;
-        for (auto &o : options[Policy::required]) {
+            if (valid)
+	        break;
+	}
+        for (auto& o : options[Policy::required]) {
             valid = optionExists(o.first.c_str());
             if (!valid)
                 break;
@@ -33,16 +44,16 @@ public:
         return valid;
     }
 
-    void printHelpMessage() const {
-        std::cout << errMsg("\nUSAGE") << std::endl;
+    void printHelpMessage(std::string title = "USAGE") {
+        std::cout << title << std::endl;
         std::cout << "\n[required options, provide all]\n";
-        for (auto &o : options[Policy::required])
+        for (auto& o : options[Policy::required])
             std::cout << o.first << "\t" << o.second << std::endl;
         std::cout << "\n[required options, provide any of them]\n";
-        for (auto &o : options[Policy::anyOf])
+        for (auto& o : options[Policy::anyOf])
             std::cout << o.first << "\t" << o.second << std::endl;
         std::cout << "\n[optional]\n";
-        for (auto &o : options[Policy::optional])
+        for (auto& o : options[Policy::optional])
             std::cout << o.first << "\t" << o.second << std::endl;
         std::cout << std::endl;
     }
@@ -77,3 +88,5 @@ private:
     std::vector<std::string> tokens;
     std::map<Policy, std::set<std::pair<std::string, std::string>>> options;
 };
+
+#endif  // MINICMD
