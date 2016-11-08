@@ -47,17 +47,17 @@ public:
     }
 
     void printHelpMessage(std::string title = "USAGE") {
-        std::cout << title << std::endl;
-        std::cout << "\n[required options, provide all]\n";
+        std::cerr << title << std::endl;
+        std::cerr << "\n[required options, provide all]\n";
         for (auto& o : options[Policy::required])
-            std::cout << o.first << "\t" << o.second << std::endl;
-        std::cout << "\n[required options, provide any of them]\n";
+            std::cerr << o.first << "\t" << o.second << std::endl;
+        std::cerr << "\n[required options, provide any of them]\n";
         for (auto& o : options[Policy::anyOf])
-            std::cout << o.first << "\t" << o.second << std::endl;
-        std::cout << "\n[optional]\n";
+            std::cerr << o.first << "\t" << o.second << std::endl;
+        std::cerr << "\n[optional]\n";
         for (auto& o : options[Policy::optional])
-            std::cout << o.first << "\t" << o.second << std::endl;
-        std::cout << std::endl;
+            std::cerr << o.first << "\t" << o.second << std::endl;
+        std::cerr << std::endl;
     }
 
     const std::string getParameter(const std::string &option) const {
