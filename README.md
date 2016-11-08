@@ -1,5 +1,5 @@
 # MiniCommander
-A simple, minimalistic command line parser written in C++11
+A simple, minimalistic but still powerful command line parser written in C++11
 
 ***When you can't or don't want to use Boost for parsing a few strings, try MiniCommander!***
 
