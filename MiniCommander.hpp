@@ -35,7 +35,9 @@ public:
             valid = optionExists(o.first.c_str());
             if (valid)
 	        break;
-	}
+	    }
+        if (!valid)
+            return false;
         for (auto& o : options[Policy::required]) {
             valid = optionExists(o.first.c_str());
             if (!valid)
