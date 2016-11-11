@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
     
     std::string dataFolder = cmd.getParameter("-d");
     if (dataFolder.empty()) {
-        std::cout << errMsg("error: please specify path to dataset") << std::endl;
+        std::cerr << "error: please specify path to dataset" << std::endl;
         cmd.printHelpMessage();
         return EXIT_FAILURE;
     }
