@@ -76,15 +76,41 @@ public:
     // check whether any token satisfies the custom boolean functor or lambda 'f' which evaluates against 't'
     // of type T, e.g. a regex: f = [&](std::string token, std::regex re) { return ... }
     template<typename T>
-    bool anyToken(const std::function<bool(std::string, T)> f, T& t) const {
-        bool satisfied = false;
-        for (auto &token: tokens) {
-            satisfied = f(token, std::forward<T>(t));
-            if (satisfied)
-                break;
+    bool anyToken(const std::function<bool(std::string, T)>& f, T& t) const {
+        for (auto& token: tokens) {
+            if (f(token, t))
+                return true;
         }
-        return satisfied;
+        return false;
     }
+    template<typename T> // for rvalues
+    bool anyToken(const std::function<bool(std::string, T)>& f, T&& t) const { return anyToken(f, t); };
+
+    // check whether all tokens satisfy the custom boolean functor or lambda 'f'
+    template<typename T>
+    bool allTokens(const std::function<bool(std::string, T)>& f, T& t) const {
+        for (auto& token: tokens) {
+            if (!f(token, t))
+                return false;
+        }
+        return true;
+    }
+    template<typename T> // for rvalues
+    bool allTokens(const std::function<bool(std::string, T)>& f, T&& t) const { return allTokens(f, t); };
+
+    // return the tokens which satisfy the boolean functor or lambda 'f'
+    template<typename T>
+    std::vector<std::string> whichTokens(const std::function<bool(std::string, T)>& f, T& t) const {
+        std::vector<std::string> matches;
+        for (auto& token: tokens) {
+            if (f(token, t))
+                matches.push_back(token);
+        }
+        return matches;
+    }
+    template<typename T> // for rvalues
+    std::vector<std::string> whichTokens(const std::function<bool(std::string, T)>& f, T&& t) const {
+        return whichTokens(f, t); };
 
 private:
     std::vector<std::string> tokens;
