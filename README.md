@@ -11,10 +11,15 @@ A simple, minimalistic but still powerful command line parser written in C++11
 
 ## Example Usage 
 
+This code snippet shows the command line interface functions offered by MiniCommander. As an example for the advanced functions, we pass a lambda function with a regular expression check into the MiniCommander object.
+
 ```c++
 
 #include <iostream>
+#include <regex>
 #include "MiniCommander.hpp"
+
+using namespace std;  // just for example
 
 int main(int argc, char *argv[])
 {
@@ -28,22 +33,37 @@ int main(int argc, char *argv[])
         cmd.printHelpMessage();
         return EXIT_FAILURE;
     }
-    
-    std::string dataFolder = cmd.getParameter("-d");
+
+    string dataFolder = cmd.getParameter("-d");
     if (dataFolder.empty()) {
-        std::cerr << "error: please specify path to dataset" << std::endl;
+        cerr << "error: please specify path to dataset" << endl;
         cmd.printHelpMessage();
         return EXIT_FAILURE;
     }
-    
-    std::string format;
-    if (cmd.optionExists("-x") 
-      format = "x";
-    else
-      format = "y";
-    
-    bool activate = cmd.optionExists("-a");
-    
+
+    if (cmd.optionExists("-x"))
+        cout << "using x format!" << endl;
+            else
+        cout << "using y format!" << endl;
+    if (cmd.optionExists("-a"))
+        cout << "activating something optional!" << endl;
+
+    // advanced stuff: inject custom token checks via a lambda function, e.g. with regex
+    auto matchingRegex = [&](const string& token, const regex r) -> bool { return regex_match(token, r); };
+    string re_str = ".*|.*\\/";
+    regex re(re_str);
+
+    if (cmd.anyToken<regex>(matchingRegex, re))
+        cout << "some token matches regex: " << re_str << endl;
+    vector<string> matches = cmd.whichTokens<regex>(matchingRegex, re);
+    if (!matches.empty()) {
+        cout << "the matching tokens are:" << endl;
+        for (auto& m : matches)
+            cout << m << endl;
+    }
+    if (cmd.allTokens<regex>(matchingRegex, re))
+        cout << "all tokens match regex: " << re_str << endl;
+
     return EXIT_SUCCESS;
 }
 ```
