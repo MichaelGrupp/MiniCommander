@@ -1,5 +1,7 @@
 # MiniCommander
-A simple, minimalistic but still powerful command line parser written in C++11
+A simple, minimalistic but still powerful command line parser written in C++11 for quick tests and small projects. 
+
+The library is header-only and only depends on the C++11 STL.
 
 ***When you can't or don't want to use Boost for parsing a few strings, try MiniCommander!***
 
@@ -11,7 +13,7 @@ A simple, minimalistic but still powerful command line parser written in C++11
 
 ## Example Usage 
 
-This code snippet shows the command line interface functions offered by MiniCommander. As an example for the advanced functions, we pass a lambda function with a regular expression check into the MiniCommander object.
+This code snippet shows how to use the command line interface functions offered by MiniCommander. As an example for the advanced functions, we pass a lambda function with a regular expression check into the MiniCommander object.
 
 ```c++
 
@@ -43,7 +45,7 @@ int main(int argc, char *argv[])
 
     if (cmd.optionExists("-x"))
         cout << "using x format!" << endl;
-            else
+    else
         cout << "using y format!" << endl;
     if (cmd.optionExists("-a"))
         cout << "activating something optional!" << endl;
@@ -66,4 +68,32 @@ int main(int argc, char *argv[])
 
     return EXIT_SUCCESS;
 }
+```
+
+If we call this program (minicmd_test) without the required options: `./minicmd_test`, the following output is generated:
+```
+USAGE
+
+[required options, provide all]
+-d	path to data folder
+
+[required options, provide any of them]
+-x	use x format
+-y	use y format
+
+[optional]
+-a	activate something
+```
+
+If it's called correctly: `./minicmd_test -d my/data/folder -x -a`, we get this output:
+```
+using x format!
+activating something optional!
+some token matches regex: .*|.*\/
+the matching tokens are:
+-d
+my/data/folder
+-x
+-a
+all tokens match regex: .*|.*\/
 ```
