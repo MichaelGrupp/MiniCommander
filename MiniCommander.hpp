@@ -60,17 +60,29 @@ public:
         std::cerr << std::endl;
     }
 
-    const std::string getParameter(const std::string &option) const {
+    const std::string getParameter(const std::string& option) const {
         std::vector<std::string>::const_iterator itr;
         itr = std::find(this->tokens.begin(), this->tokens.end(), option);
         if (itr != this->tokens.end() && ++itr != this->tokens.end()) {
-            return *itr;
+            // return parameter if it is not another option
+            if (!isOption(*itr))
+                return *itr;
         }
         return "";
     }
 
-    bool optionExists(const std::string &option) const {
+    bool optionExists(const std::string& option) const {
         return std::find(this->tokens.begin(), this->tokens.end(), option) != this->tokens.end();
+    }
+
+    bool isOption(const std::string& str) const {
+        for (auto& policySet : options) {
+            for (auto& desc : policySet.second){
+                if (desc.first == str)
+                    return true;
+            }
+        }
+        return false;
     }
 
     // check whether any token satisfies the custom boolean functor or lambda 'f' which evaluates against 't'
