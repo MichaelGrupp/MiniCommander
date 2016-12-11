@@ -7,7 +7,7 @@
 #include <set>
 #include <map>
 #include <vector>
-#include <functional>
+#include <algorithm>
 #include <iostream>
 
 enum class Policy {
@@ -68,7 +68,7 @@ public:
         }
     }
 
-    const std::string getParameter(const std::string &option) const {
+    const std::string getParameter(const std::string& option) const {
         std::vector<std::string>::const_iterator itr;
         itr = std::find(tokens.begin(), tokens.end(), option);
         if (itr != tokens.end() && ++itr != tokens.end()) {
@@ -78,7 +78,7 @@ public:
         return "";
     }
 
-    bool optionExists(const std::string &option) const {
+    bool optionExists(const std::string& option) const {
         return std::find(tokens.begin(), tokens.end(), option) != tokens.end();
     }
 
