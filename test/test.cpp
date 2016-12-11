@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
 
     if (cmd.optionExists("-x"))
         cout << "using x format!" << endl;
-            else
+    else
         cout << "using y format!" << endl;
     if (cmd.optionExists("-a"))
         cout << "activating something optional!" << endl;

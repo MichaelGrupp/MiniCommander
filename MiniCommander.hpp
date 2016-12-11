@@ -22,11 +22,11 @@ class MiniCommander {
 public:
     MiniCommander(const int &argc, char **argv) {
         for (int i = 1; i < argc; ++i)
-            this->tokens.push_back(std::string(argv[i]));
+            tokens.push_back(std::string(argv[i]));
     }
 
     void addOption(std::string flag, Policy policy, std::string desc = "") {
-        this->options[policy].insert(std::make_pair(flag, desc));
+        options[policy].insert(std::make_pair(flag, desc));
     }
 
     bool checkFlags() {
@@ -60,10 +60,10 @@ public:
         std::cerr << std::endl;
     }
 
-    const std::string getParameter(const std::string& option) const {
+    const std::string getParameter(const std::string& option) {
         std::vector<std::string>::const_iterator itr;
-        itr = std::find(this->tokens.begin(), this->tokens.end(), option);
-        if (itr != this->tokens.end() && ++itr != this->tokens.end()) {
+        itr = std::find(tokens.begin(), tokens.end(), option);
+        if (itr != tokens.end() && ++itr != tokens.end()) {
             // return parameter if it is not another option
             if (!isOption(*itr))
                 return *itr;
@@ -72,15 +72,13 @@ public:
     }
 
     bool optionExists(const std::string& option) const {
-        return std::find(this->tokens.begin(), this->tokens.end(), option) != this->tokens.end();
+        return std::find(tokens.begin(), tokens.end(), option) != tokens.end();
     }
 
-    bool isOption(const std::string& str) const {
+    bool isOption(const std::string& flag) {
         for (auto& policySet : options) {
-            for (auto& desc : policySet.second){
-                if (desc.first == str)
-                    return true;
-            }
+            if (policySet.second[flag] != "")
+                return true;
         }
         return false;
     }
@@ -126,7 +124,7 @@ public:
 
 private:
     std::vector<std::string> tokens;
-    std::map<Policy, std::set<std::pair<std::string, std::string>>> options;
+    std::map<Policy, std::map<std::string, std::string> > options;
 };
 
 #endif  // MINICMD
