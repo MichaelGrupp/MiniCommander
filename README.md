@@ -28,13 +28,13 @@ int main(int argc, char *argv[])
 
     OptionGroup paths(Policy::required, "required paths");
     paths.addOption("-d", "path to data folder");
-    //paths.addOption("-t", "path to test folder");
+    paths.addOption("-t", "path to test folder");
     cmd.addOptionGroup(paths);
 
     OptionGroup formats(Policy::anyOf, "formats, choose any of them");
     formats.addOption("-x", "use x format");
     formats.addOption("-y", "use y format");
-    formats.addOption("-z", "use y format");
+    formats.addOption("-z", "use z format");
     cmd.addOptionGroup(formats);
 
     OptionGroup optionals(Policy::optional, "optional parameters");
@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
 
     string dataFolder = cmd.getParameter("-d");
     string testFolder = cmd.getParameter("-t");
-    if (dataFolder.empty()) {
+    if (dataFolder.empty() || testFolder.empty()) {
         cerr << "error: please specify required paths" << endl;
         cmd.printHelpMessage();
         return EXIT_FAILURE;
