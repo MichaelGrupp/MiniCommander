@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
     paths.addOption("-t", "path to test folder");
     cmd.addOptionGroup(paths);
 
-    OptionGroup formats(Policy::anyOf, "formats, choose any of them");
+    OptionGroup formats(Policy::anyOf, "formats, choose one of them");
     formats.addOption("-x", "use x format");
     formats.addOption("-y", "use y format");
     formats.addOption("-z", "use z format");
