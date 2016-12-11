@@ -1,24 +1,23 @@
 # MiniCommander
-A simple, minimalistic but still powerful command line parser written in C++11 for quick tests and small projects. 
+A simple, minimalistic but still powerful command line parser in less than 100 lines of C++11 code.
 
-The library is header-only and only depends on the C++11 STL.
+The library is header-only and only depends on the C++11 STL. This is not intended as a replacement for big libraries (e.g. <boost/filesystem>), rather as an option for quick tests and small projects.
 
-***When you can't or don't want to use Boost for parsing a few strings, try MiniCommander!***
+***Features**
 
-* *add flags and their descriptions*
-* *mark flags as required, optional or "any of"*
+* *organize flags in groups*
+* *mark groups as required, optional or "any of"*
+* *add flags and their descriptions to the groups*
 * *check if all flags are valid*
 * *get parameters from flags*
-* *pass your own custom checks (e.g. regular expressions) of the tokens via lambda functions*
 
 ## Example Usage 
 
-This code snippet shows how to use the command line interface functions offered by MiniCommander. As an example for the advanced functions, we pass a lambda function with a regular expression check into the MiniCommander object.
+This code snippet shows how to use the command line interface functions offered by MiniCommander.
 
 ```c++
 
 #include <iostream>
-#include <regex>
 #include "MiniCommander.hpp"
 
 using namespace std;  // just for example
@@ -26,74 +25,46 @@ using namespace std;  // just for example
 int main(int argc, char *argv[])
 {
     MiniCommander cmd(argc, argv);
-    cmd.addOption("-d", Policy::required, "path to data folder");
-    cmd.addOption("-x", Policy::anyOf, "use x format");
-    cmd.addOption("-y", Policy::anyOf, "use y format");
-    cmd.addOption("-a", Policy::optional, "activate something");
 
-    if (!cmd.checkFlags()) {
+    OptionGroup paths(Policy::required, "required paths");
+    paths.addOption("-d", "path to data folder");
+    //paths.addOption("-t", "path to test folder");
+    cmd.addOptionGroup(paths);
+
+    OptionGroup formats(Policy::anyOf, "formats, choose any of them");
+    formats.addOption("-x", "use x format");
+    formats.addOption("-y", "use y format");
+    formats.addOption("-z", "use y format");
+    cmd.addOptionGroup(formats);
+
+    OptionGroup optionals(Policy::optional, "optional parameters");
+    optionals.addOption("-a", "activate something");
+    optionals.addOption("--help", "show info and usage");
+    cmd.addOptionGroup(optionals);
+
+    if (!cmd.checkFlags() || cmd.optionExists("--help")) {
         cmd.printHelpMessage();
         return EXIT_FAILURE;
     }
 
     string dataFolder = cmd.getParameter("-d");
+    string testFolder = cmd.getParameter("-t");
     if (dataFolder.empty()) {
-        cerr << "error: please specify path to dataset" << endl;
+        cerr << "error: please specify required paths" << endl;
         cmd.printHelpMessage();
         return EXIT_FAILURE;
     }
 
     if (cmd.optionExists("-x"))
         cout << "using x format!" << endl;
-    else
+    else if (cmd.optionExists("-y"))
         cout << "using y format!" << endl;
+    else if (cmd.optionExists("-z"))
+        cout << "using z format!" << endl;
+
     if (cmd.optionExists("-a"))
         cout << "activating something optional!" << endl;
 
-    // advanced stuff: inject custom token checks via a lambda function, e.g. with regex
-    auto matchingRegex = [&](const string& token, const regex r) -> bool { return regex_match(token, r); };
-    string re_str = ".*|.*\\/";
-    regex re(re_str);
-
-    if (cmd.anyToken<regex>(matchingRegex, re))
-        cout << "some token matches regex: " << re_str << endl;
-    vector<string> matches = cmd.whichTokens<regex>(matchingRegex, re);
-    if (!matches.empty()) {
-        cout << "the matching tokens are:" << endl;
-        for (auto& m : matches)
-            cout << m << endl;
-    }
-    if (cmd.allTokens<regex>(matchingRegex, re))
-        cout << "all tokens match regex: " << re_str << endl;
-
     return EXIT_SUCCESS;
 }
-```
-
-If we call this program (minicmd_test) without the required options: `./minicmd_test`, the following output is generated:
-```
-USAGE
-
-[required options, provide all]
--d	path to data folder
-
-[required options, provide any of them]
--x	use x format
--y	use y format
-
-[optional]
--a	activate something
-```
-
-If it's called correctly: `./minicmd_test -d my/data/folder -x -a`, we get this output:
-```
-using x format!
-activating something optional!
-some token matches regex: .*|.*\/
-the matching tokens are:
--d
-my/data/folder
--x
--a
-all tokens match regex: .*|.*\/
 ```
