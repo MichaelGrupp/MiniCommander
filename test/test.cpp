@@ -7,45 +7,45 @@ using namespace std;  // just for example
 int main(int argc, char *argv[])
 {
     MiniCommander cmd(argc, argv);
-    cmd.addOption("-d", Policy::required, "path to data folder");
-    cmd.addOption("-x", Policy::anyOf, "use x format");
-    cmd.addOption("-y", Policy::anyOf, "use y format");
-    cmd.addOption("-a", Policy::optional, "activate something");
 
-    if (!cmd.checkFlags()) {
+    OptionGroup paths(Policy::required, "required paths");
+    paths.addOption("-d", "path to data folder");
+    //paths.addOption("-t", "path to test folder");
+    cmd.addOptionGroup(paths);
+
+    OptionGroup formats(Policy::anyOf, "formats, choose any of them");
+    formats.addOption("-x", "use x format");
+    formats.addOption("-y", "use y format");
+    formats.addOption("-z", "use y format");
+    cmd.addOptionGroup(formats);
+
+    OptionGroup optionals(Policy::optional, "optional parameters");
+    optionals.addOption("-a", "activate something");
+    optionals.addOption("--help", "show info and usage");
+    cmd.addOptionGroup(optionals);
+
+    if (!cmd.checkFlags() || cmd.optionExists("--help")) {
         cmd.printHelpMessage();
         return EXIT_FAILURE;
     }
 
     string dataFolder = cmd.getParameter("-d");
+    string testFolder = cmd.getParameter("-t");
     if (dataFolder.empty()) {
-        cerr << "error: please specify path to dataset" << endl;
+        cerr << "error: please specify required paths" << endl;
         cmd.printHelpMessage();
         return EXIT_FAILURE;
     }
 
     if (cmd.optionExists("-x"))
         cout << "using x format!" << endl;
-    else
+    else if (cmd.optionExists("-y"))
         cout << "using y format!" << endl;
+    else if (cmd.optionExists("-z"))
+        cout << "using z format!" << endl;
+
     if (cmd.optionExists("-a"))
         cout << "activating something optional!" << endl;
-
-    // advanced stuff: inject custom token checks via a lambda function, e.g. with regex
-    auto matchingRegex = [&](const string& token, const regex r) -> bool { return regex_match(token, r); };
-    string re_str = ".*|.*\\/";
-    regex re(re_str);
-
-    if (cmd.anyToken<regex>(matchingRegex, re))
-        cout << "some token matches regex: " << re_str << endl;
-    vector<string> matches = cmd.whichTokens<regex>(matchingRegex, re);
-    if (!matches.empty()) {
-        cout << "the matching tokens are:" << endl;
-        for (auto& m : matches)
-            cout << m << endl;
-    }
-    if (cmd.allTokens<regex>(matchingRegex, re))
-        cout << "all tokens match regex: " << re_str << endl;
 
     return EXIT_SUCCESS;
 }
