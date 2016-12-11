@@ -3,7 +3,7 @@ A simple, minimalistic but still powerful command line parser in less than 100 l
 
 The library is header-only and only depends on the C++11 STL. This is not intended as a replacement for big libraries (e.g. boost::filesystem), rather as an option for quick tests and small projects.
 
-***Features**
+***Features***
 
 * *organize flags in groups*
 * *mark groups as required, optional or "any of"*
