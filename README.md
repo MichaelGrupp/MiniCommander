@@ -11,9 +11,11 @@ The library is header-only and only depends on the C++11 STL. This is not intend
 * *check if all flags are valid*
 * *get parameters from flags*
 
-## Example Usage 
+## Installation
+Just drop the header file "MiniCommander.hpp" in your project and include it in your program.
 
-This code snippet shows how to use the command line interface functions offered by MiniCommander.
+## Example Usage
+This code example [test.cpp](https://github.com/MichaelGrupp/MiniCommander/blob/master/test/test.cpp) shows how to use the command line interface functions offered by MiniCommander:
 
 ```c++
 
@@ -43,7 +45,7 @@ int main(int argc, char *argv[])
     cmd.addOptionGroup(optionals);
 
     if (!cmd.checkFlags() || cmd.optionExists("--help")) {
-        cmd.printHelpMessage();
+        cmd.printHelpMessage("MiniCommander Example\n\nUSAGE:");
         return EXIT_FAILURE;
     }
 
@@ -67,4 +69,30 @@ int main(int argc, char *argv[])
 
     return EXIT_SUCCESS;
 }
+```
+If [test.cpp](https://github.com/MichaelGrupp/MiniCommander/blob/master/test/test.cpp) is compiled and called with the wrong parameters: `./test -d ~/Documents/data -t ~/Documents/test -a`
+(here, none of the options from the ```formats``` group is given and ```checkFlags()``` fails), we get the following output:
+```
+MiniCommander Example
+
+USAGE:
+
+[required paths]
+-d	path to data folder
+-t	path to test folder
+
+[formats, choose one of them]
+-x	use x format
+-y	use y format
+-z	use z format
+
+[optional parameters]
+--help	show info and usage
+-a	activate something
+```
+
+With correct parameters, e.g.: `./test -d ~/Documents/data -t ~/Documents/test -a -z`, we get:
+```
+using z format!
+activating something optional!
 ```
