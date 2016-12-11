@@ -12,7 +12,7 @@ The library is header-only and only depends on the C++11 STL. This is not intend
 * *get parameters from flags*
 
 ## Installation
-Just drop the header file "MiniCommander.hpp" in your project and include it in your program.
+Just drop the header file [MiniCommander.hpp](https://github.com/MichaelGrupp/MiniCommander/blob/master/MiniCommander.hpp) in your project and include it in your program.
 
 ## Example Usage
 This code example [test.cpp](https://github.com/MichaelGrupp/MiniCommander/blob/master/test/test.cpp) shows how to use the command line interface functions offered by MiniCommander:
