@@ -69,13 +69,19 @@ public:
     }
 
     const std::string getParameter(const std::string& option) const {
-        std::vector<std::string>::const_iterator itr;
-        itr = std::find(tokens.begin(), tokens.end(), option);
-        if (itr != tokens.end() && ++itr != tokens.end()) {
-            if (!isOption(*itr))
-                return *itr;  // return parameter if it is not another option
-        }
+        auto itr = std::find(tokens.begin(), tokens.end(), option);
+        if (itr != tokens.end() && ++itr != tokens.end() && !isOption(*itr))
+            return *itr;
         return "";
+    }
+
+    const std::vector<std::string> getMultiParameters(const std::string& option) const {
+        std::vector<std::string> params;
+        auto itr = std::find(tokens.begin(), tokens.end(), option);
+        while (itr != tokens.end() && ++itr != tokens.end() && !isOption(*itr)) {
+            params.push_back(*itr);
+        }
+        return params;
     }
 
     bool optionExists(const std::string& option) const {

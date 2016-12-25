@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
 
     OptionGroup paths(Policy::required, "required paths");
     paths.addOption("-d", "path to data folder");
-    paths.addOption("-t", "path to test folder");
+    paths.addOption("-f", "paths of one or multiple files (separated by space)");
     cmd.addOptionGroup(paths);
 
     OptionGroup formats(Policy::anyOf, "formats, choose one of them");
@@ -29,12 +29,16 @@ int main(int argc, char *argv[])
     }
 
     string dataFolder = cmd.getParameter("-d");
-    string testFolder = cmd.getParameter("-t");
-    if (dataFolder.empty() || testFolder.empty()) {
+    vector<string> filePaths = cmd.getMultiParameters("-f");
+    if (dataFolder.empty() || filePaths.empty()) {
         cerr << "error: please specify required paths" << endl;
         cmd.printHelpMessage();
         return EXIT_FAILURE;
     }
+    cout << "data folder: " << dataFolder << endl;
+    cout << "file paths: " << endl;
+    for (auto& path : filePaths)
+        cout << path << endl;
 
     if (cmd.optionExists("-x"))
         cout << "using x format!" << endl;
