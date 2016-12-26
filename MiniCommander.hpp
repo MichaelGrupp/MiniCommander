@@ -32,8 +32,16 @@ struct OptionGroup {
 class MiniCommander {
 public:
     MiniCommander(const int &argc, char **argv) {
-        for (int i = 1; i < argc; ++i)
-            tokens.push_back(std::string(argv[i]));
+        for (int i = 1; i < argc; ++i) {
+            std::string str = std::string(argv[i]);
+            unsigned long equal_pos = str.find_first_of('=');
+            if (equal_pos == std::string::npos)
+                tokens.push_back(str);
+            else {  // split argument with '='
+                tokens.push_back(str.substr(0, equal_pos));
+                tokens.push_back(str.substr(equal_pos+1));
+            }
+        }
     }
 
     void addOptionGroup(OptionGroup group) {
@@ -46,7 +54,7 @@ public:
             for (auto& o : group.options) {
                 valid = optionExists(o.first);
                 if (group.p == Policy::required && !valid)
-                    return false;
+                    break;
                 else if (group.p == Policy::anyOf && valid)
                     break;
                 else if (group.p == Policy::optional)
