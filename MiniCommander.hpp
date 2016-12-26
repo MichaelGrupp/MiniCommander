@@ -43,18 +43,17 @@ public:
     bool checkFlags() const {
         bool valid = false;
         for (auto& group : optionGroups) {
-            Policy p = group.p;
             for (auto& o : group.options) {
                 valid = optionExists(o.first);
-                if (p == Policy::required && !optionExists(o.first))
+                if (group.p == Policy::required && !valid)
                     return false;
-                else if (p == Policy::anyOf && optionExists(o.first))
+                else if (group.p == Policy::anyOf && valid)
                     break;
-                else if (p == Policy::optional)
+                else if (group.p == Policy::optional)
                     valid = true;  // don't care
             }
             if (!valid)
-                return false;
+                break;
         }
         return valid;
     }
