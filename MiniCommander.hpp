@@ -7,6 +7,7 @@
 #include <set>
 #include <map>
 #include <vector>
+#include <cassert>
 #include <algorithm>
 #include <iostream>
 
@@ -31,7 +32,7 @@ struct OptionGroup {
 
 class MiniCommander {
 public:
-    MiniCommander(const int &argc, char **argv) {
+    MiniCommander(const int argc, char const*const* argv) {
         for (int i = 1; i < argc; ++i) {
             std::string str = std::string(argv[i]);
             unsigned long equal_pos = str.find_first_of('=');
