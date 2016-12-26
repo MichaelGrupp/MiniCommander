@@ -36,16 +36,16 @@ int main(int argc, char *argv[])
         return EXIT_FAILURE;
     }
     cout << "data folder: " << dataFolder << endl;
-    cout << "file paths: " << endl;
+    cout << "file paths: ";
     for (auto& path : filePaths)
-        cout << path << endl;
+        cout << path << ", ";
 
     if (cmd.optionExists("-x"))
-        cout << "using x format!" << endl;
+        cout << "\nusing x format!" << endl;
     else if (cmd.optionExists("-y"))
-        cout << "using y format!" << endl;
+        cout << "\nusing y format!" << endl;
     else if (cmd.optionExists("-z"))
-        cout << "using z format!" << endl;
+        cout << "\nusing z format!" << endl;
 
     if (cmd.optionExists("-a"))
         cout << "activating something optional!" << endl;
