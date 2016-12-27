@@ -15,6 +15,19 @@ The library is header-only and only depends on the C++11 STL. This is not intend
 ## Installation
 Just drop the header file [MiniCommander.hpp](https://github.com/MichaelGrupp/MiniCommander/blob/master/MiniCommander.hpp) in your project and include it in your program.
 
+## Supported Formats
+* single flags
+    * can be named arbitrarily, e.g. `-f` or long version `--flag`
+    * check existence of a single flag with `optionExists("--flag")`
+* single parameters
+    * a parameter appears after its flag, e.g.: `--param 100` or `--param=100`
+    * the parameter string can be accessed with `getParameter("--param")`
+* multiple parameters
+    * multiple parameters appear after their flag, e.g. `--multi first second third`
+    * `getMultiParameters("--multi")` returns the string vector of multiple parameters 
+
+The `checkFlags()` function checks if all required flags were given by the user. If parameters were not given, the parameter string returned by `getParameter` (or vector by `getMultiParameters`) is empty.
+
 ## Example Usage
 This code example [test.cpp](https://github.com/MichaelGrupp/MiniCommander/blob/master/test/test.cpp) shows how to use the command line interface functions offered by MiniCommander:
 
