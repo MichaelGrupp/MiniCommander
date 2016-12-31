@@ -17,13 +17,10 @@ enum class Policy {
 };
 
 struct OptionGroup {
-    Policy p;
+    Policy policy;
     std::string groupDescription;
     std::map<std::string, std::string> options;
-    OptionGroup(Policy p, std::string groupDescription) {
-        this->p = p;
-        this->groupDescription = groupDescription;
-    }
+    OptionGroup(Policy p, std::string description) : policy(p), groupDescription(description) {}
     void addOption(std::string flag, std::string desc = "") {
         options[flag] = desc;
     }
@@ -49,15 +46,15 @@ public:
     }
 
     bool checkFlags() const {
-        bool valid = false;
+        bool valid = true;
         for (auto& group : optionGroups) {
             for (auto& o : group.options) {
                 valid = optionExists(o.first);
-                if (group.p == Policy::required && !valid)
+                if (group.policy == Policy::required && !valid)
                     break;
-                else if (group.p == Policy::anyOf && valid)
+                else if (group.policy == Policy::anyOf && valid)
                     break;
-                else if (group.p == Policy::optional)
+                else if (group.policy == Policy::optional)
                     valid = true;  // don't care
             }
             if (!valid)
@@ -70,16 +67,14 @@ public:
         std::cerr << title << std::endl;
         for (auto& group : optionGroups) {
             std::cerr << "\n[" + group.groupDescription + "]\n";
-            for (auto &o : group.options)
+            for (auto& o : group.options)
                 std::cerr << o.first << "\t" << o.second << std::endl;
         }
     }
 
     const std::string getParameter(const std::string& option) const {
         auto itr = std::find(tokens.begin(), tokens.end(), option);
-        if (itr != tokens.end() && ++itr != tokens.end() && !isOption(*itr))
-            return *itr;
-        return "";
+        return (itr != tokens.end() && ++itr != tokens.end() && !isOption(*itr)) ? *itr : "";
     }
 
     const std::vector<std::string> getMultiParameters(const std::string& option) const {
