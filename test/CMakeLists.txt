@@ -10,6 +10,7 @@ INCLUDE_DIRECTORIES("googletest-release-1.8.0/googletest/include")
 
 # add gtest (building with same compiler is best option)
 add_subdirectory(googletest-release-1.8.0)
+config_compiler_and_linker()
 
 # applications
 ADD_EXECUTABLE(test_app test.cpp)
