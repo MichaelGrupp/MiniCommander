@@ -1,23 +1,21 @@
+sudo: false
 language: cpp
-
-sudo: required
-
 compiler:
-  - clang
   - gcc
-
-script:
-  - sudo unlink /usr/bin/gcc && sudo ln -s /usr/bin/gcc-5 /usr/bin/gcc
-  - gcc --version
-  - mkdir test/build
-  - cd test/build
-  - cmake .. && make
-  - ./unit_test
-
+  - clang
+install:
+- if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
 addons:
   apt:
     sources:
     - ubuntu-toolchain-r-test
     packages:
-    - gcc-5
-- g++-5
+    - gcc-4.8
+    - g++-4.8
+    - clang
+
+script:
+  - mkdir test/build
+  - cd test/build
+  - cmake .. && make
+  - ./unit_test
