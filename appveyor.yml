@@ -19,9 +19,7 @@ build:
 
 after_build: # We're still in %home%\build
   - cmd: '%cmake% --build . --target INSTALL --config Release'
-
-test:
-  C:\projects\minicommander\build\Release\unit_test.exe
+  - cmd: 'C:\projects\minicommander\build\Release\unit_test.exe' 
 
 configuration:
   - Release
