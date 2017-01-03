@@ -1,4 +1,7 @@
-# MiniCommander
+# MiniCommander 
+
+[![Build Status](https://travis-ci.org/MichaelGrupp/MiniCommander.svg?branch=master)](https://travis-ci.org/MichaelGrupp/MiniCommander)
+
 A simple, minimalistic but still powerful command line parser in less than 100 lines of C++11 code.
 
 The library is header-only and only depends on the C++11 STL. This is not intended as a replacement for big libraries (e.g. boost::filesystem), rather as an option for quick tests and small projects.
