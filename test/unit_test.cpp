@@ -42,12 +42,14 @@ vector<OptionGroup> makeTestOptionGroups() {
     return optionGroups;
 }
 
-// for printing std::array
-template <class T, std::size_t N>
-ostream& operator<<(ostream& o, const array<T, N>& arr)
-{
-    copy(arr.cbegin(), arr.cend(), ostream_iterator<T>(o, " "));
-    return o;
+// quick hack for printing args
+std::string print(int argc, char const*const* argv) {
+    std::string str = "";
+    for(int i=0; i<argc; i++) {
+        str.append(argv[i]);
+        str.append(" ");
+    }
+    return str;
 }
 
 TEST_F(MiniCommanderTest, testCheckFlags_correct) {
@@ -59,7 +61,7 @@ TEST_F(MiniCommanderTest, testCheckFlags_correct) {
     auto optionGroups = makeTestOptionGroups();
     for (auto& g : optionGroups)
         mc->addOptionGroup(g);
-    EXPECT_EQ(mc->checkFlags(), true) << "failed with argv: " << argv_std;
+    EXPECT_EQ(mc->checkFlags(), true) << "failed with argv: " << print(argc, argv);
 }
 
 TEST_F(MiniCommanderTest, testCheckFlags_wrong) {
@@ -71,7 +73,7 @@ TEST_F(MiniCommanderTest, testCheckFlags_wrong) {
     auto optionGroups = makeTestOptionGroups();
     for (auto& g : optionGroups)
         mc->addOptionGroup(g);
-    EXPECT_EQ(mc->checkFlags(), false) << "failed with argv: " << argv_std;
+    EXPECT_EQ(mc->checkFlags(), false) << "failed with argv: " << print(argc, argv);
 }
 
 TEST_F(MiniCommanderTest, testParameter) {
@@ -83,7 +85,7 @@ TEST_F(MiniCommanderTest, testParameter) {
     auto optionGroups = makeTestOptionGroups();
     for (auto& g : optionGroups)
         mc->addOptionGroup(g);
-    EXPECT_EQ(mc->checkFlags(), true) << "failed with argv: " << argv_std;
+    EXPECT_EQ(mc->checkFlags(), true) << "failed with argv: " << print(argc, argv);
     string param = mc->getParameter("-d").c_str();
     ASSERT_STREQ(param.c_str(), "/data/dataset");
 }
@@ -97,7 +99,7 @@ TEST_F(MiniCommanderTest, testMissingParameter) {
     auto optionGroups = makeTestOptionGroups();
     for (auto& g : optionGroups)
         mc->addOptionGroup(g);
-    EXPECT_EQ(mc->checkFlags(), true) << "failed with argv: " << argv_std;
+    EXPECT_EQ(mc->checkFlags(), true) << "failed with argv: " << print(argc, argv);
     string param = mc->getParameter("-d").c_str();
     ASSERT_STREQ(param.c_str(), "");
 }
@@ -111,7 +113,7 @@ TEST_F(MiniCommanderTest, testEqualParameter) {
     auto optionGroups = makeTestOptionGroups();
     for (auto& g : optionGroups)
         mc->addOptionGroup(g);
-    EXPECT_EQ(mc->checkFlags(), true) << "failed with argv: " << argv_std;
+    EXPECT_EQ(mc->checkFlags(), true) << "failed with argv: " << print(argc, argv);
     string param = mc->getParameter("-d");
     ASSERT_STREQ(param.c_str(), "/data/dataset");
 }
@@ -125,7 +127,7 @@ TEST_F(MiniCommanderTest, testMissingEqualParameter) {
     auto optionGroups = makeTestOptionGroups();
     for (auto& g : optionGroups)
         mc->addOptionGroup(g);
-    EXPECT_EQ(mc->checkFlags(), true) << "failed with argv: " << argv_std;
+    EXPECT_EQ(mc->checkFlags(), true) << "failed with argv: " << print(argc, argv);
     string param = mc->getParameter("-d");
     ASSERT_STREQ(param.c_str(), "");
 }
@@ -141,14 +143,14 @@ TEST_F(MiniCommanderTest, testMultiParameters) {
     auto optionGroups = makeTestOptionGroups();
     for (auto& g : optionGroups)
         mc->addOptionGroup(g);
-    EXPECT_EQ(mc->checkFlags(), true) << "failed with argv: " << argv_std;
+    EXPECT_EQ(mc->checkFlags(), true) << "failed with argv: " << print(argc, argv);
     string param = mc->getParameter("-d");
     ASSERT_STREQ(param.c_str(), "/data/dataset");
     vector<string> params = mc->getMultiParameters("-f");
-    ASSERT_TRUE(params.size() == 3) << "actual size is: " << param.size() << "\nfailed with argv: " << argv_std;
-    ASSERT_STREQ(params[0].c_str(), "first.txt") << "failed with argv: " << argv_std;
-    ASSERT_STREQ(params[1].c_str(), "second.txt") << "failed with argv: " << argv_std;
-    ASSERT_STREQ(params[2].c_str(), "third.txt") << "failed with argv: " << argv_std;
+    ASSERT_TRUE(params.size() == 3) << "actual size is: " << param.size() << "\nfailed with argv: " << print(argc, argv);
+    ASSERT_STREQ(params[0].c_str(), "first.txt") << "failed with argv: " << print(argc, argv);
+    ASSERT_STREQ(params[1].c_str(), "second.txt") << "failed with argv: " << print(argc, argv);
+    ASSERT_STREQ(params[2].c_str(), "third.txt") << "failed with argv: " << print(argc, argv);
 }
 
 TEST_F(MiniCommanderTest, testMissingMultiParameters) {
@@ -160,11 +162,11 @@ TEST_F(MiniCommanderTest, testMissingMultiParameters) {
     auto optionGroups = makeTestOptionGroups();
     for (auto& g : optionGroups)
         mc->addOptionGroup(g);
-    EXPECT_EQ(mc->checkFlags(), true) << "failed with argv: " << argv_std;
+    EXPECT_EQ(mc->checkFlags(), true) << "failed with argv: " << print(argc, argv);
     string param = mc->getParameter("-d");
     ASSERT_STREQ(param.c_str(), "/data/dataset");
     vector<string> params = mc->getMultiParameters("-f");
-    ASSERT_TRUE(params.empty()) << "actual size is: " << param.size() << "\nfailed with argv: " << argv_std;
+    ASSERT_TRUE(params.empty()) << "actual size is: " << param.size() << "\nfailed with argv: " << print(argc, argv);
 }
 
 TEST_F(MiniCommanderTest, testOptionExists) {
@@ -176,9 +178,9 @@ TEST_F(MiniCommanderTest, testOptionExists) {
     auto optionGroups = makeTestOptionGroups();
     for (auto& g : optionGroups)
         mc->addOptionGroup(g);
-    EXPECT_EQ(mc->checkFlags(), true) << "failed with argv: " << argv_std;
-    EXPECT_TRUE(mc->optionExists("--help")) << "failed with argv: " << argv_std;
-    EXPECT_FALSE(mc->optionExists("-a")) << "failed with argv: " << argv_std;
+    EXPECT_EQ(mc->checkFlags(), true) << "failed with argv: " << print(argc, argv);
+    EXPECT_TRUE(mc->optionExists("--help")) << "failed with argv: " << print(argc, argv);
+    EXPECT_FALSE(mc->optionExists("-a")) << "failed with argv: " << print(argc, argv);
 }
 
 TEST_F(MiniCommanderTest, testNoArgs) {
@@ -187,13 +189,13 @@ TEST_F(MiniCommanderTest, testNoArgs) {
     array<const char*, argc> argv_std = {"appname"};
     char const* const* argv = (char const* const*)argv_std.data();
     SetUp(argc, argv);
-    EXPECT_EQ(mc->checkFlags(), true) << "failed with argv: " << argv_std;
+    EXPECT_EQ(mc->checkFlags(), true) << "failed with argv: " << print(argc, argv);
     string param = mc->getParameter("-d");
     ASSERT_STREQ(param.c_str(), "");
     vector<string> params = mc->getMultiParameters("-f");
-    ASSERT_TRUE(params.empty()) << "actual size is: " << param.size() << "\nfailed with argv: " << argv_std;
-    EXPECT_FALSE(mc->optionExists("--help")) << "failed with argv: " << argv_std;
-    EXPECT_FALSE(mc->optionExists("-a")) << "failed with argv: " << argv_std;
+    ASSERT_TRUE(params.empty()) << "actual size is: " << param.size() << "\nfailed with argv: " << print(argc, argv);
+    EXPECT_FALSE(mc->optionExists("--help")) << "failed with argv: " << print(argc, argv);
+    EXPECT_FALSE(mc->optionExists("-a")) << "failed with argv: " << print(argc, argv);
 }
 
 int main(int argc, char** argv)
