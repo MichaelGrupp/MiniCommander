@@ -20,5 +20,9 @@ build:
 after_build: # We're still in %home%\build
   - cmd: '%cmake% --build . --target INSTALL --config Release'
 
+test:
+  assemblies:
+    - '**\unit_test.exe'
+
 configuration:
   - Release
