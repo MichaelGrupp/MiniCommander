@@ -12,7 +12,7 @@ install:
 before_build: # We're still in %home%
   - cmd: mkdir build
   - cmd: cd build
-  - cmd: '%cmake% -G "Visual Studio 14 Win64" -DCMAKE_INSTALL_PREFIX=..\install ..\MiniCommander\test'
+  - cmd: '%cmake% -G "Visual Studio 14 Win64" -DCMAKE_INSTALL_PREFIX=..\install ..\test'
 
 build:
   project: C:\projects\build\MINICMD_TEST.sln
