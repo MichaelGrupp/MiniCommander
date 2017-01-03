@@ -6,7 +6,7 @@ project(${PROJECT_NAME})
 SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -std=c++11 -O3" )
 
 INCLUDE_DIRECTORIES("..")
-INCLUDE_DIRECTORIES(${GTEST_INCLUDE_DIRS})
+INCLUDE_DIRECTORIES("../googletest-release-1.8.0/googletest/include")
 
 # add gtest (building with same compiler is best option)
 add_subdirectory(googletest-release-1.8.0)
