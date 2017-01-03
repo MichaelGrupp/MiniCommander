@@ -1,8 +1,5 @@
 # MiniCommander 
 
-[![Build Status](https://travis-ci.org/MichaelGrupp/MiniCommander.svg?branch=master)](https://travis-ci.org/MichaelGrupp/MiniCommander)
-[![Build status](https://ci.appveyor.com/api/projects/status/8ubu1kv85rcmiohv/branch/master?svg=true&passingText=Windows%3A%20build%20passing&failingText=Windows%3A%20build%20failing&pendingText=Windows%3A%20build%20pending)](https://ci.appveyor.com/project/MichaelGrupp/minicommander)
-
 A simple, minimalistic but still powerful command line parser in less than 100 lines of C++11 code.
 
 The library is header-only and only depends on the C++11 STL. This is not intended as a replacement for big libraries (e.g. boost::filesystem), rather as an option for quick tests and small projects.
@@ -15,6 +12,12 @@ The library is header-only and only depends on the C++11 STL. This is not intend
 * *check if all flags are valid*
 * *get single parameter from flags*
 * *get multiple parameters from flags*
+
+## Platforms
+Unit tests are performed on Linux (GCC & Clang), as well as on Windows (MSVC14). See the build badges for more details:
+
+[![Build Status](https://travis-ci.org/MichaelGrupp/MiniCommander.svg?branch=master)](https://travis-ci.org/MichaelGrupp/MiniCommander)
+[![Build status](https://ci.appveyor.com/api/projects/status/8ubu1kv85rcmiohv/branch/master?svg=true&passingText=Windows%3A%20build%20passing&failingText=Windows%3A%20build%20failing&pendingText=Windows%3A%20build%20pending)](https://ci.appveyor.com/project/MichaelGrupp/minicommander)
 
 ## Installation
 Just drop the header file [MiniCommander.hpp](https://github.com/MichaelGrupp/MiniCommander/blob/master/MiniCommander.hpp) in your project and include it in your program.
