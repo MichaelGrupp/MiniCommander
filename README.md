@@ -1,6 +1,7 @@
 # MiniCommander 
 
 [![Build Status](https://travis-ci.org/MichaelGrupp/MiniCommander.svg?branch=master)](https://travis-ci.org/MichaelGrupp/MiniCommander)
+[![Build status](https://ci.appveyor.com/api/projects/status/8ubu1kv85rcmiohv?svg=true)](https://ci.appveyor.com/project/MichaelGrupp/minicommander?svg=true&passingText=Windows%3A%20build%20passing&failingText=Windows%3A%20build%20failing&pendingText=Windows%3A%20build%20pending)
 
 A simple, minimalistic but still powerful command line parser in less than 100 lines of C++11 code.
 
