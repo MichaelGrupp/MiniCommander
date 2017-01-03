@@ -14,7 +14,7 @@ The library is header-only and only depends on the C++11 STL. This is not intend
 * *get multiple parameters from flags*
 
 ## Platforms
-Unit tests are performed on Linux (GCC & Clang), as well as on Windows (MSVC14). See the build badges for more details:
+Automatic [unit tests](https://github.com/MichaelGrupp/MiniCommander/blob/master/test/unit_test.cpp) written with [Google Test](https://github.com/google/googletest) are performed on Linux (compilers: GCC 4.8 & Clang), as well as on Windows (compiler: MSVC14). Click the build badges for more details:
 
 [![Build Status](https://travis-ci.org/MichaelGrupp/MiniCommander.svg?branch=master)](https://travis-ci.org/MichaelGrupp/MiniCommander)
 [![Build status](https://ci.appveyor.com/api/projects/status/8ubu1kv85rcmiohv/branch/master?svg=true&passingText=Windows%3A%20build%20passing&failingText=Windows%3A%20build%20failing&pendingText=Windows%3A%20build%20pending)](https://ci.appveyor.com/project/MichaelGrupp/minicommander)
