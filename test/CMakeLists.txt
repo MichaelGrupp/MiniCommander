@@ -3,7 +3,9 @@ cmake_minimum_required (VERSION 2.6)
 set(PROJECT_NAME MINICMD_TEST)
 project(${PROJECT_NAME})
 
+IF (NOT WIN32)
 SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -std=c++11 -O3" )
+ENDIF()
 
 INCLUDE_DIRECTORIES("..")
 INCLUDE_DIRECTORIES("googletest-release-1.8.0/googletest/include")
