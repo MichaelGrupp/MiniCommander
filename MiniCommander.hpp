@@ -32,7 +32,7 @@ public:
     MiniCommander(const int argc, char const*const* argv) {
         for (int i = 1; i < argc; ++i) {
             std::string str = std::string(argv[i]);
-            unsigned long equal_pos = str.find_first_of('=');
+            size_t equal_pos = str.find_first_of('=');
             if (equal_pos == std::string::npos)
                 tokens.push_back(str);
             else {  // split argument with '='
