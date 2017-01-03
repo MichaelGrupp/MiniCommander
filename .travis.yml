@@ -1,0 +1,11 @@
+language: cpp
+
+compiler:
+  - clang
+  - gcc
+
+script:
+  - mkdir test/build
+  - cd test/build
+  - cmake .. && make
+  - ./unit_test

@@ -7,8 +7,10 @@ SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -std=c++11 -O3" )
 
 INCLUDE_DIRECTORIES("..")
 
-# applications
-FILE(GLOB incs "*.hpp")
-FILE(GLOB srcs "*.cpp")
+# add gtest (building with same compiler is best option)
+add_subdirectory(googletest-release-1.8.0)
 
-ADD_EXECUTABLE(minicmd_test ${incs} ${srcs})
+# applications
+ADD_EXECUTABLE(test_app test.cpp)
+ADD_EXECUTABLE(unit_test unit_test.cpp)
+TARGET_LINK_LIBRARIES(unit_test gtest gtest_main)
