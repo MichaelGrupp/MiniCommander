@@ -25,7 +25,7 @@ Just drop the header file [MiniCommander.hpp](https://github.com/MichaelGrupp/Mi
 
 ## Supported Formats for Arguments
 
-By default, flags can be name arbitrarily. Single parameters appear after a flag (here: `-d`). Multiple space-separated parameters are also possible (here after `-f`).
+By default, flags can be named arbitrarily. Single parameters appear after a flag (here: `-d`). Multiple space-separated parameters are also possible (here after `-f`).
 ```
 -x -y -z -d param -f param1 param2 param3
 -x -y -z -d=param -f=param1 param2 param3
