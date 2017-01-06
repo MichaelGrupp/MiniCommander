@@ -5,7 +5,7 @@ using namespace std;  // just for example
 
 int main(int argc, char *argv[])
 {
-    bool unixFlags = false;  // whether to split -xyz into -x -y -z
+    bool unixFlags = false;  // whether to split single char options, e.g. -xyz into -x -y -z
     MiniCommander cmd(argc, argv, true);
 
     OptionGroup paths(Policy::required, "required paths");
