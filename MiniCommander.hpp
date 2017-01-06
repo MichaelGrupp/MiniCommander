@@ -30,7 +30,7 @@ struct OptionGroup {
 
 class MiniCommander {
 public:
-    MiniCommander(const int argc, char const*const* argv, bool unixFlags=false) {
+    MiniCommander(const int argc, char const*const* argv, bool unixFlags=false) : unixFlags(unixFlags) {
         for (int i = 1; i < argc; ++i) {
             std::string str = std::string(argv[i]);
             if (unixFlags && std::regex_match(str, std::regex("^(-[a-zA-Z]{2,})(=.*$|$)"))) {
@@ -101,11 +101,12 @@ private:
     bool isOption(const std::string& str) const {
         for (auto& group : optionGroups) {
             for (auto& o : group.options)
-                if (str==o.first || str==o.second.second) return true;
+                if (str==o.first || str==o.second.second || (unixFlags && str[0] == '-')) return true;
         }
         return false;
     }
 
+    bool unixFlags;
     std::vector<std::string> tokens;
     std::vector<OptionGroup> optionGroups;
 };

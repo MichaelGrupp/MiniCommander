@@ -220,8 +220,9 @@ TEST_F(MiniCommanderTest, testUnixOptionsCorrect) {
 
 TEST_F(MiniCommanderTest, testUnixOptionsWrong) {
     // test wrong Unix option behaviour, i.e. --xyz should NOT be parsed like -x -y -z
+    // -fl param1 param2 with unknown option -l should not lead to params = -l param1 param2
     const int argc = 6;
-    array<const char*, argc> argv_std = {"appname", "-d=/data/dataset", "-f", "file1.txt", "--xyz", "--do_thisdo_that"};
+    array<const char*, argc> argv_std = {"appname", "-xd=/data/dataset", "-fl", "file1.txt", "--yz", "--do_thisdo_that"};
     char const* const* argv = (char const* const*)argv_std.data();
     bool unixFlags = true;
     SetUp(argc, argv, unixFlags);
@@ -232,8 +233,8 @@ TEST_F(MiniCommanderTest, testUnixOptionsWrong) {
     string param = mc->getParameter("-d");
     ASSERT_STREQ(param.c_str(), "/data/dataset");
     vector<string> params = mc->getMultiParameters("-f");
-    ASSERT_STREQ(params[0].c_str(), "file1.txt");
-    ASSERT_FALSE(mc->optionExists("-x"));
+    ASSERT_TRUE(params.empty());
+    ASSERT_TRUE(mc->optionExists("-x"));
     ASSERT_FALSE(mc->optionExists("-y"));
     ASSERT_FALSE(mc->optionExists("-z"));
     ASSERT_FALSE(mc->optionExists("--do_this"));
