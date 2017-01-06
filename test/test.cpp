@@ -5,7 +5,8 @@ using namespace std;  // just for example
 
 int main(int argc, char *argv[])
 {
-    MiniCommander cmd(argc, argv);
+    bool unixFlags = false;  // whether to split -xyz into -x -y -z
+    MiniCommander cmd(argc, argv, true);
 
     OptionGroup paths(Policy::required, "required paths");
     paths.addOption("-d", "path to data folder");
@@ -42,9 +43,9 @@ int main(int argc, char *argv[])
 
     if (cmd.optionExists("-x"))
         cout << "\nusing x format!" << endl;
-    else if (cmd.optionExists("-y"))
+    if (cmd.optionExists("-y"))
         cout << "\nusing y format!" << endl;
-    else if (cmd.optionExists("-z"))
+    if (cmd.optionExists("-z"))
         cout << "\nusing z format!" << endl;
 
     if (cmd.optionExists("-a"))

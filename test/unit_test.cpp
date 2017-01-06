@@ -15,8 +15,8 @@ using namespace std;
 
 class MiniCommanderTest : public ::testing::Test {
 protected:
-    void SetUp(int argc, char const* const* argv) {
-        mc = new MiniCommander(argc, argv);
+    void SetUp(int argc, char const* const* argv, bool unixFlags=false) {
+        mc = new MiniCommander(argc, argv, unixFlags);
     }
     void TearDown() {
         delete mc;
@@ -196,6 +196,48 @@ TEST_F(MiniCommanderTest, testNoArgs) {
     ASSERT_TRUE(params.empty()) << "actual size is: " << param.size() << "\nfailed with argv: " << print(argc, argv);
     EXPECT_FALSE(mc->optionExists("--help")) << "failed with argv: " << print(argc, argv);
     EXPECT_FALSE(mc->optionExists("-a")) << "failed with argv: " << print(argc, argv);
+}
+
+TEST_F(MiniCommanderTest, testUnixOptionsCorrect) {
+    // test Unix option behaviour, i.e. -xyz should be parsed like -x -y -z
+    const int argc = 6;
+    array<const char*, argc> argv_std = {"appname", "-d=/data/dataset", "-f", "file1.txt", "-xyz", "--do_this"};
+    char const* const* argv = (char const* const*)argv_std.data();
+    bool unixFlags = true;
+    SetUp(argc, argv, unixFlags);
+    auto optionGroups = makeTestOptionGroups();
+    for (auto& g : optionGroups)
+        mc->addOptionGroup(g);
+    EXPECT_EQ(mc->checkFlags(), true) << "Unix option check failed with argv: " << print(argc, argv);
+    string param = mc->getParameter("-d");
+    ASSERT_STREQ(param.c_str(), "/data/dataset");
+    vector<string> params = mc->getMultiParameters("-f");
+    ASSERT_STREQ(params[0].c_str(), "file1.txt");
+    ASSERT_TRUE(mc->optionExists("-x"));
+    ASSERT_TRUE(mc->optionExists("-y"));
+    ASSERT_TRUE(mc->optionExists("-z"));
+}
+
+TEST_F(MiniCommanderTest, testUnixOptionsWrong) {
+    // test wrong Unix option behaviour, i.e. --xyz should NOT be parsed like -x -y -z
+    const int argc = 6;
+    array<const char*, argc> argv_std = {"appname", "-d=/data/dataset", "-f", "file1.txt", "--xyz", "--do_thisdo_that"};
+    char const* const* argv = (char const* const*)argv_std.data();
+    bool unixFlags = true;
+    SetUp(argc, argv, unixFlags);
+    auto optionGroups = makeTestOptionGroups();
+    for (auto& g : optionGroups)
+        mc->addOptionGroup(g);
+    EXPECT_EQ(mc->checkFlags(), false) << "Unix option check failed with argv: " << print(argc, argv);
+    string param = mc->getParameter("-d");
+    ASSERT_STREQ(param.c_str(), "/data/dataset");
+    vector<string> params = mc->getMultiParameters("-f");
+    ASSERT_STREQ(params[0].c_str(), "file1.txt");
+    ASSERT_FALSE(mc->optionExists("-x"));
+    ASSERT_FALSE(mc->optionExists("-y"));
+    ASSERT_FALSE(mc->optionExists("-z"));
+    ASSERT_FALSE(mc->optionExists("--do_this"));
+    ASSERT_FALSE(mc->optionExists("--do_that"));
 }
 
 int main(int argc, char** argv)
