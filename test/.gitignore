@@ -1,3 +1,16 @@
-*~
-idea/*
-build/*
+#no build folder
+build/
+
+#no CLion project files
+.idea/**
+**/.idea/
+
+#no large data archives
+*.tar.gz
+*.zip
+*.bag
+*.tgz
+
+CMakeCache.txt
+CMakeFiles/
+cmake-build-debug/
