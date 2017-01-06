@@ -14,7 +14,8 @@ The library is header-only and only depends on the C++11 STL. This is not intend
 * *get multiple parameters from flags*
 
 ## Platforms
-Automatic [unit tests](https://github.com/MichaelGrupp/MiniCommander/blob/master/test/unit_test.cpp) written with [Google Test](https://github.com/google/googletest) are performed on Linux (compilers: GCC 4.8 & Clang), as well as on Windows (compiler: MSVC14). Click the build badges for more details:
+You will need a C++ compiler that supports C++11 regex, e.g. Clang >3.6 or GCC >4.9.
+Automatic [unit tests](https://github.com/MichaelGrupp/MiniCommander/blob/master/test/unit_test.cpp) written with [Google Test](https://github.com/google/googletest) are performed on Linux (compilers: GCC 4.9 & Clang 3.6), as well as on Windows (compiler: MSVC14). Click the build badges for more details:
 
 [![Build Status](https://travis-ci.org/MichaelGrupp/MiniCommander.svg?branch=master)](https://travis-ci.org/MichaelGrupp/MiniCommander)
 [![Build status](https://ci.appveyor.com/api/projects/status/8ubu1kv85rcmiohv/branch/master?svg=true&passingText=Windows%3A%20build%20passing&failingText=Windows%3A%20build%20failing&pendingText=Windows%3A%20build%20pending)](https://ci.appveyor.com/project/MichaelGrupp/minicommander)
@@ -26,6 +27,9 @@ Just drop the header file [MiniCommander.hpp](https://github.com/MichaelGrupp/Mi
 * single flags
     * can be named arbitrarily, e.g. `-f` or long version `--flag`
     * check existence of a single flag with `optionExists("--flag")`
+* UNIX style multiple single flags
+    * `-xyz` will be parsed like `-x -y -z`, `--xyz` won't
+    * activate this behaviour by setting the optional `unixFlags`parameter of the constructor to `true`
 * single parameters
     * a parameter appears after its flag, e.g.: `--param 100` or `--param=100`
     * the parameter string can be accessed with `getParameter("--param")`
