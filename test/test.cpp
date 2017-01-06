@@ -9,8 +9,8 @@ int main(int argc, char *argv[])
     MiniCommander cmd(argc, argv, unixFlags);
 
     OptionGroup paths(Policy::required, "required paths");
-    paths.addOption("-d", "path to data folder");
-    paths.addOption("-f", "paths of one or multiple files (separated by space)");
+    paths.addOption("-d", "path to data folder", "--data");
+    paths.addOption("-f", "paths of one or multiple files (separated by space)", "--files");
     cmd.addOptionGroup(paths);
 
     OptionGroup formats(Policy::anyOf, "formats, choose one of them");
@@ -29,8 +29,10 @@ int main(int argc, char *argv[])
         return EXIT_FAILURE;
     }
 
-    string dataFolder = cmd.getParameter("-d");
-    vector<string> filePaths = cmd.getMultiParameters("-f");
+    // get parameters from flag (or optional alternative flag if it was given)
+    string dataFolder = cmd.optionExists("--data") ? cmd.getParameter("--data") : cmd.getParameter("-d");
+    vector<string> filePaths = cmd.optionExists("--files") ?
+                               cmd.getMultiParameters("--files") : cmd.getMultiParameters("-f");
     if (dataFolder.empty() || filePaths.empty()) {
         cerr << "error: please specify required paths" << endl;
         cmd.printHelpMessage();

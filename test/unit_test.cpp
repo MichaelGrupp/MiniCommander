@@ -26,8 +26,8 @@ protected:
 
 vector<OptionGroup> makeTestOptionGroups() {
     OptionGroup required(Policy::required, "required parameters");
-    required.addOption("-d", "path to a dataset folder");
-    required.addOption("-f", "path to one or multiple files");
+    required.addOption("-d", "path to a dataset folder", "--data");
+    required.addOption("-f", "path to one or multiple files", "--files");
     OptionGroup switches(Policy::anyOf, "switches, choose one");
     switches.addOption("--do_this");
     switches.addOption("--do_that");
@@ -276,6 +276,28 @@ TEST_F(MiniCommanderTest, testUnixJunkParams) {
     ASSERT_STRNE(param.c_str(), "/data/dataset");
     vector<string> params = mc->getMultiParameters("-f");
     ASSERT_STREQ(params[0].c_str(), "file1.txt");
+    ASSERT_TRUE(mc->optionExists("-x"));
+    ASSERT_TRUE(mc->optionExists("-y"));
+    ASSERT_TRUE(mc->optionExists("-z"));
+    ASSERT_TRUE(mc->optionExists("--do_this"));
+}
+
+TEST_F(MiniCommanderTest, testAlternativeFlags) {
+    // test alternative flags as specified in their optionGroup
+    const int argc = 7;
+    array<const char*, argc> argv_std = {"appname", "-xyz", "--files", "f1", "f2", "--data=/data/dataset", "--do_this"};
+    char const* const* argv = (char const* const*)argv_std.data();
+    bool unixFlags = true;
+    SetUp(argc, argv, unixFlags);
+    auto optionGroups = makeTestOptionGroups();
+    for (auto& g : optionGroups)
+        mc->addOptionGroup(g);
+    EXPECT_EQ(mc->checkFlags(), true) << "Unix option check failed with argv: " << print(argc, argv);
+    string param = mc->getParameter("--data");
+    ASSERT_STREQ(param.c_str(), "/data/dataset");
+    vector<string> params = mc->getMultiParameters("--files");
+    ASSERT_STREQ(params[0].c_str(), "f1");
+    ASSERT_STREQ(params[1].c_str(), "f2");
     ASSERT_TRUE(mc->optionExists("-x"));
     ASSERT_TRUE(mc->optionExists("-y"));
     ASSERT_TRUE(mc->optionExists("-z"));

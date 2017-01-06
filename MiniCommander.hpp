@@ -21,10 +21,10 @@ enum class Policy {
 struct OptionGroup {
     Policy policy;
     std::string groupDescription;
-    std::map<std::string, std::string> options;
+    std::map<std::string, std::pair<std::string, std::string>> options;
     OptionGroup(Policy p, std::string description) : policy(p), groupDescription(description) {}
-    void addOption(std::string flag, std::string desc = "") {
-        options[flag] = desc;
+    void addOption(std::string flag, std::string desc = "", std::string alternativeFlag="") {
+        options[flag] = std::make_pair(desc, alternativeFlag);
     }
 };
 
@@ -56,7 +56,7 @@ public:
         bool valid = true;
         for (auto& group : optionGroups) {
             for (auto& o : group.options) {
-                valid = optionExists(o.first);
+                valid = optionExists(o.first) || optionExists(o.second.second);
                 if (group.policy == Policy::required && !valid)
                     break;
                 else if (group.policy == Policy::anyOf && valid)
@@ -75,7 +75,7 @@ public:
         for (auto& group : optionGroups) {
             std::cerr << "\n[" + group.groupDescription + "]\n";
             for (auto& o : group.options)
-                std::cerr << o.first << "\t" << o.second << std::endl;
+                std::cerr << o.first << " " << o.second.second << "\t" << o.second.first << std::endl;
         }
     }
 
@@ -100,8 +100,8 @@ public:
 private:
     bool isOption(const std::string& str) const {
         for (auto& group : optionGroups) {
-            if (group.options.find(str) != group.options.end())
-                return true;
+            for (auto& o : group.options)
+                if (str==o.first || str==o.second.second) return true;
         }
         return false;
     }
