@@ -54,9 +54,9 @@ To use these features, the command line options must be first grouped by their c
 
 Example of a required option group:
 ```c++
- OptionGroup requiredExample(Policy::required, "required options");
- paths.addOption("-d", "first required argument");
- paths.addOption("-f", "other required argument", "--flag");
+ OptionGroup requiredGroup(Policy::required, "required options");
+ requiredGroup.addOption("-d", "first required argument");
+ requiredGroup.addOption("-f", "other required argument", "--flag");
 ```
 Note that an **optional long alternative** `--flag` of the `-f` flag was added. This group can now be added to a *MiniCommander* instance via `addOptionGroup`.
 
