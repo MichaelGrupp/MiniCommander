@@ -240,6 +240,48 @@ TEST_F(MiniCommanderTest, testUnixOptionsWrong) {
     ASSERT_FALSE(mc->optionExists("--do_that"));
 }
 
+TEST_F(MiniCommanderTest, testUnixOptionsWithEqualParam) {
+    // test what happens with -xyzd=/data/dataset
+    const int argc = 5;
+    array<const char*, argc> argv_std = {"appname", "-xyzd=/data/dataset", "-f", "file1.txt", "--do_this"};
+    char const* const* argv = (char const* const*)argv_std.data();
+    bool unixFlags = true;
+    SetUp(argc, argv, unixFlags);
+    auto optionGroups = makeTestOptionGroups();
+    for (auto& g : optionGroups)
+        mc->addOptionGroup(g);
+    EXPECT_EQ(mc->checkFlags(), true) << "Unix option check failed with argv: " << print(argc, argv);
+    string param = mc->getParameter("-d");
+    ASSERT_STREQ(param.c_str(), "/data/dataset");
+    vector<string> params = mc->getMultiParameters("-f");
+    ASSERT_STREQ(params[0].c_str(), "file1.txt");
+    ASSERT_TRUE(mc->optionExists("-x"));
+    ASSERT_TRUE(mc->optionExists("-y"));
+    ASSERT_TRUE(mc->optionExists("-z"));
+    ASSERT_TRUE(mc->optionExists("--do_this"));
+}
+
+TEST_F(MiniCommanderTest, testUnixJunkParams) {
+    // some junk is passed
+    const int argc = 6;
+    array<const char*, argc> argv_std = {"appname", "-xyz=d=/data/dataset", "-f", "file1.txt", "--do_this", "-%271=da"};
+    char const* const* argv = (char const* const*)argv_std.data();
+    bool unixFlags = true;
+    SetUp(argc, argv, unixFlags);
+    auto optionGroups = makeTestOptionGroups();
+    for (auto& g : optionGroups)
+        mc->addOptionGroup(g);
+    EXPECT_EQ(mc->checkFlags(), false) << "Unix option check failed with argv: " << print(argc, argv);
+    string param = mc->getParameter("-d");
+    ASSERT_STRNE(param.c_str(), "/data/dataset");
+    vector<string> params = mc->getMultiParameters("-f");
+    ASSERT_STREQ(params[0].c_str(), "file1.txt");
+    ASSERT_TRUE(mc->optionExists("-x"));
+    ASSERT_TRUE(mc->optionExists("-y"));
+    ASSERT_TRUE(mc->optionExists("-z"));
+    ASSERT_TRUE(mc->optionExists("--do_this"));
+}
+
 int main(int argc, char** argv)
 {
     ::testing::InitGoogleTest(&argc, argv);

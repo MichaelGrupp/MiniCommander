@@ -51,7 +51,7 @@ using namespace std;  // just for example
 int main(int argc, char *argv[])
 {
     bool unixFlags = false;  // whether to split single char options, e.g. -xyz into -x -y -z
-    MiniCommander cmd(argc, argv, true);
+    MiniCommander cmd(argc, argv, unixFlags);
 
     OptionGroup paths(Policy::required, "required paths");
     paths.addOption("-d", "path to data folder");

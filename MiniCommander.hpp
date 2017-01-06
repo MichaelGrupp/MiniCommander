@@ -33,9 +33,9 @@ public:
     MiniCommander(const int argc, char const*const* argv, bool unixFlags=false) {
         for (int i = 1; i < argc; ++i) {
             std::string str = std::string(argv[i]);
-            if (unixFlags && std::regex_match(str, std::regex("-[a-zA-Z]{2,}"))) {
-                for (size_t f=1; f < str.size(); ++f)
-                    tokens.push_back(std::string{'-', str[f]});
+            if (unixFlags && std::regex_match(str, std::regex("^(-[a-zA-Z]{2,})(=.*$|$)"))) {
+                for (size_t f=1; f < str.size() && str[f-1] != '='; ++f)
+                    tokens.push_back((str[f] != '=') ? std::string{'-', str[f]} : str.substr(f + 1));
             } else {
                 size_t equal_pos = str.find_first_of('=');
                 if (equal_pos == std::string::npos)
